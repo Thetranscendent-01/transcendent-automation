@@ -304,6 +304,30 @@ def generate_feed_xml(items: list[dict], now_iso: str) -> str:
 """
 
 
+MAIN_SITE_DEEP_LINKS = [
+    ("https://thetranscendent.org/courses/", "Free Multilingual Courses Directory (English, বাংলা, हिन्दी)"),
+    ("https://thetranscendent.org/courses/html-introduction-why-learn-to-html-code-in-the-age-of-ai-era-english/", "HTML Introduction: Why Learn HTML Code in the Age of AI (English)"),
+    ("https://thetranscendent.org/courses/html-ai-%e0%a6%8f%e0%a6%b0-%e0%a6%af%e0%a7%81%e0%a6%97%e0%a7%87-%e0%a6%ac%e0%a6%be%e0%a6%82%e0%a6%b2%e0%a6%be-%e0%a6%a4%e0%a7%87/", "HTML AI এর যুগে বাংলা তে (Bengali HTML Course)"),
+    ("https://thetranscendent.org/courses/html-ai-%e0%a4%af%e0%a5%81%e0%a4%97-%e0%a4%95%e0%a5%87-%e0%a4%af%e0%a5%81%e0%a4%97-%e0%a4%b9%e0%a4%bf%e0%a4%82%e0%a4%a6%e0%a5%80-%e0%a4%ae%e0%a5%87%e0%a4%82/", "HTML AI युग के युग हिंदी में (Hindi HTML Course)"),
+    ("https://thetranscendent.org/courses/ai-artificial-intelligence-foundations-thinking-machine-learning-english-00/", "AI Foundations: Thinking & Machine Learning (English)"),
+    ("https://thetranscendent.org/courses/%e0%a6%8f-%e0%a6%86%e0%a6%87-%e0%a6%86%e0%a6%b0%e0%a7%8d%e0%a6%9f%e0%a6%bf%e0%a6%ab%e0%a6%bf%e0%a6%b6%e0%a6%bf%e0%a6%af%e0%a6%bc%e0%a6%be%e0%a6%b2-%e0%a6%87%e0%a6%a8%e0%a7%8d%e0%a6%9f%e0%a7%87/", "এ আই আর্টিফিশিয়াল ইন্টেলিজেন্স Foundations (Bengali AI Course)"),
+    ("https://thetranscendent.org/courses/ai-%e0%a4%86%e0%a4%b0%e0%a5%8d%e0%a4%9f%e0%a4%bf%e0%a4%ab%e0%a4%bf%e0%a4%b6%e0%a4%bf%e0%a4%af%e0%a4%b2-%e0%a4%87%e0%a4%82%e0%a4%9f%e0%a5%87%e0%a4%b2%e0%a4%bf%e0%a4%9c%e0%a5%87%e0%a4%82%e0%a4%b8-founda/", "AI आर्टिफिशियल इंटेलिजेंस Foundations (Hindi AI Course)"),
+    ("https://thetranscendent.org/courses/how-to-build-your-career-path-in-user-experience-ux/", "How to Build Your Career Path in User Experience (UX)"),
+    ("https://thetranscendent.org/courses/the-evolution-of-brand-design-from-foundations-to-fundamentals-a-look-into-its-origins-trends-and-future-insights/", "The Evolution of Brand Design: Foundations to Fundamentals (English)"),
+    ("https://thetranscendent.org/courses/%e0%a6%ac%e0%a7%8d%e0%a6%b0%e0%a7%8d%e0%a6%af%e0%a6%be%e0%a6%a8%e0%a7%8d%e0%a6%a1-%e0%a6%a1%e0%a6%bf%e0%a6%9c%e0%a6%be%e0%a6%87%e0%a6%a8%e0%a7%87%e0%a6%b0-%e0%a6%ac%e0%a6%bf%e0%a6%ac%e0%a6%b0%e0%a7%8d/", "ব্র্যান্ড ডিজাইনের বিবর্তন (Bengali Brand Design Course)"),
+    ("https://thetranscendent.org/courses/%e0%a4%ac%e0%a5%8d%e0%a4%b0%e0%a4%be%e0%a4%82%e0%a4%a1-%e0%a4%a1%e0%a4%bf%e0%a4%9c%e0%a4%bc%e0%a4%be%e0%a4%87%e0%a4%a8-%e0%a4%95%e0%a4%be-%e0%a4%b5%e0%a4%bf%e0%a4%95%e0%a4%be%e0%a4%b8-%e0%a4%a8/", "ब्रांड डिज़ाइन का विकास (Hindi Brand Design Course)"),
+    ("https://thetranscendent.org/courses/jewelry-drawing-foundations-from-basic-geometric-shapes-to-professional-organic-sketching/", "Jewelry Drawing Foundations: Geometric Shapes to Organic Sketching"),
+    ("https://thetranscendent.org/courses/how-to-learn-english/", "How to Learn English — Complete Free Course"),
+    ("https://thetranscendent.org/how-to-use-free-3d-cad-volume-calculators-for-gold-silver-platinum-and-other-metal/", "Free 3D CAD Volume Calculators for Gold, Silver, Platinum & Other Metals"),
+    ("https://thetranscendent.org/free-background-remover-tool-remove-image-backgrounds-instantly/", "Free AI Image Background Remover Tool"),
+    ("https://thetranscendent.org/n8n-for-beginner-course-free/", "n8n Automation for Beginners — Free Course"),
+    ("https://thetranscendent.org/build-n8n-ai-bots-create-ai-powered-chatbots-with-n8n/", "Build n8n AI Bots & AI-Powered Chatbots"),
+    ("https://thetranscendent.org/the-generative-ai-prompt-playbook-ready-made-prompts-for-productivity/", "The Generative AI Prompt Playbook"),
+    ("https://thetranscendent.org/shop/", "3D CAD Fine Jewelry Shop & Designs"),
+    ("https://thetranscendent.org/app/", "Interactive Browser Apps & Web Tools"),
+]
+
+
 def generate_sitemap_xml(items: list[dict], now_date: str) -> str:
     urls = [
         (f"{PAGES_URL}/", "1.0", "hourly"),
@@ -313,6 +337,10 @@ def generate_sitemap_xml(items: list[dict], now_date: str) -> str:
         (YOUTUBE_CHANNEL, "0.9", "daily"),
     ]
     seen = {u[0] for u in urls}
+    for link_url, _ in MAIN_SITE_DEEP_LINKS:
+        if link_url not in seen:
+            seen.add(link_url)
+            urls.append((link_url, "0.9", "weekly"))
     for it in items:
         u = it.get("url", "").strip()
         if u and u not in seen:
@@ -661,6 +689,17 @@ def generate_index_html(blogger_items: list[dict], youtube_items: list[dict], ru
     </div>
     <section class="grid">
 {yt_cards}
+    </section>
+
+    <div class="section-head">
+      <h2>Free Courses, Web Utilities &amp; 3D CAD Index (thetranscendent.org)</h2>
+      <a href="{MAIN_SITE}/courses/">Explore All Courses &rarr;</a>
+    </div>
+    <section class="grid">
+""" + "\n".join(
+        f'        <article class="card"><h3><a href="{html.escape(u)}" rel="noopener" target="_blank">{html.escape(label)}</a></h3><div class="card-links"><a href="{html.escape(u)}" class="btn-link" rel="noopener" target="_blank">Open on TheTranscendent.org &rarr;</a></div></article>'
+        for u, label in MAIN_SITE_DEEP_LINKS
+    ) + f"""
     </section>
   </main>
 
