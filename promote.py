@@ -154,19 +154,38 @@ def save_state(state: dict) -> None:
 
 def ping_indexnow(urls: list[str]) -> str | None:
     key = os.environ.get("INDEXNOW_KEY", "").strip()
-    if not key or not urls:
+    if not key:
         return None
-    main_urls = [u for u in urls if u.startswith(MAIN_SITE)]
-    if not main_urls:
-        return "Skipped IndexNow (no thetranscendent.org URLs in batch)"
-    payload = {
-        "host": "thetranscendent.org",
+    results = []
+    # 1. Always ping IndexNow for the verified GitHub Pages SEO Syndication Hub
+    pages_host = "thetranscendent-01.github.io"
+    pages_urls = [
+        f"{PAGES_URL}/",
+        f"{PAGES_URL}/feed.xml",
+        f"{PAGES_URL}/sitemap.xml",
+    ]
+    pages_payload = {
+        "host": pages_host,
         "key": key,
-        "keyLocation": f"{MAIN_SITE}/{key}.txt",
-        "urlList": main_urls,
+        "keyLocation": f"{PAGES_URL}/{key}.txt",
+        "urlList": pages_urls,
     }
-    status, body = post_json("https://api.indexnow.org/indexnow", payload)
-    return f"IndexNow HTTP {status}: {body[:120]}"
+    status_p, body_p = post_json("https://api.indexnow.org/indexnow", pages_payload)
+    results.append(f"IndexNow ({pages_host}) HTTP {status_p}: {body_p[:80]}")
+
+    # 2. Ping IndexNow for main site URLs if any are in the batch
+    main_urls = [u for u in urls if u.startswith(MAIN_SITE)]
+    if main_urls:
+        main_payload = {
+            "host": "thetranscendent.org",
+            "key": key,
+            "keyLocation": f"{MAIN_SITE}/{key}.txt",
+            "urlList": main_urls,
+        }
+        status_m, body_m = post_json("https://api.indexnow.org/indexnow", main_payload)
+        results.append(f"IndexNow (thetranscendent.org) HTTP {status_m}: {body_m[:80]}")
+
+    return " | ".join(results)
 
 
 def dispatch_webhook(item: dict) -> str | None:
@@ -699,11 +718,6 @@ def main() -> int:
             print(f"  -> {item['clean_title'][:45]}... | {tg}")
         processed.add(item["url"])
 
-    if new_items:
-        idx_res = ping_indexnow([it["url"] for it in new_items])
-        if idx_res:
-            print(f"  -> {idx_res}")
-
     now_utc = datetime.now(timezone.utc)
     run_time = now_utc.strftime("%Y-%m-%d %H:%M UTC")
     now_iso = now_utc.isoformat()
@@ -719,6 +733,11 @@ def main() -> int:
         FEED_XML_FILE.write_text(generate_feed_xml(syndication_items, now_iso), encoding="utf-8")
         SITEMAP_XML_FILE.write_text(generate_sitemap_xml(syndication_items, now_date), encoding="utf-8")
         print("Updated GitHub Pages SEO syndication files: index.html, feed.xml, sitemap.xml")
+
+    if new_items or syndication_items:
+        idx_res = ping_indexnow([it["url"] for it in new_items])
+        if idx_res:
+            print(f"  -> {idx_res}")
 
     state["processed_urls"] = list(processed)
     save_state(state)
